@@ -42,6 +42,7 @@ def generate_icons():
 
     styles = ["filled", "outlined", "round", "sharp", "two-tone"]
     total_count = 0
+    done_dict = {}
 
     for style in styles:
         style_src = os.path.join(base_svg_dir, style)
@@ -73,6 +74,15 @@ def generate_icons():
                     pascal_name = to_pascal_case(icon_name) + style_suffix
                     if pascal_name[0].isdigit():
                         pascal_name = "Icon" + pascal_name
+
+                    if pascal_name in done_dict:
+                        continue
+
+                    # conflicts with Stream from page lib
+                    if pascal_name == "Stream":
+                        pascal_name = "StreamIcon"
+
+                    done_dict[pascal_name] = True
 
                     component_code = f"""public #universal {pascal_name}(props) {{
     return <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" {{...props}}>
